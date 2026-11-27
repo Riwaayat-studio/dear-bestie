@@ -1,0 +1,488 @@
+/* Base Variables & Ambient Velvety Backdrop */
+:root {
+    --bg-deep: #1c101b;
+    --glass-bg: rgba(255, 255, 255, 0.11);
+    --glass-bg-elevated: rgba(255, 255, 255, 0.16);
+    --glass-border: rgba(255, 255, 255, 0.24);
+    --glass-highlight: rgba(255, 240, 245, 0.45);
+}
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background: radial-gradient(circle at 18% 12%, #3a1932 0%, #2b1627 45%, #1c101b 100%);
+    color: #fff8f9;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* Lock scroll while passcode gate is active */
+body.locked {
+    overflow: hidden;
+    height: 100vh;
+}
+
+/* Fluid Editorial Typography */
+.hero-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.1rem, 5.5vw, 3.5rem);
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+}
+
+.section-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.45rem, 3.5vw, 1.95rem);
+    line-height: 1.25;
+}
+
+.story-text {
+    font-size: clamp(0.98rem, 2.2vw, 1.08rem);
+    line-height: 1.85;
+}
+
+/* Drifting Ambient Aurora & Bokeh Light Orbs */
+.ambient-canvas {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.aurora-orb {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(85px);
+    opacity: 0.55;
+    will-change: transform;
+}
+
+.orb-rose {
+    width: 340px;
+    height: 340px;
+    background: radial-gradient(circle, #ff8fab 0%, rgba(255, 143, 171, 0) 70%);
+    top: -5%;
+    left: -8%;
+    animation: driftOne 18s ease-in-out infinite alternate;
+}
+
+.orb-peach {
+    width: 380px;
+    height: 380px;
+    background: radial-gradient(circle, #ffb5a7 0%, rgba(255, 181, 167, 0) 70%);
+    top: 32%;
+    right: -12%;
+    opacity: 0.45;
+    animation: driftTwo 22s ease-in-out infinite alternate;
+}
+
+.orb-lavender {
+    width: 360px;
+    height: 360px;
+    background: radial-gradient(circle, #cdb4db 0%, rgba(205, 180, 219, 0) 70%);
+    bottom: -8%;
+    left: 10%;
+    opacity: 0.48;
+    animation: driftThree 20s ease-in-out infinite alternate;
+}
+
+.orb-gold {
+    width: 260px;
+    height: 260px;
+    background: radial-gradient(circle, #f7d99c 0%, rgba(247, 217, 156, 0) 70%);
+    top: 62%;
+    left: 45%;
+    opacity: 0.32;
+    animation: driftOne 25s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes driftOne {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(45px, 60px) scale(1.12); }
+}
+
+@keyframes driftTwo {
+    0% { transform: translate(0, 0) scale(1.05); }
+    100% { transform: translate(-55px, -40px) scale(0.95); }
+}
+
+@keyframes driftThree {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(40px, -50px) scale(1.1); }
+}
+
+/* Ambient Floating Cute Animals Layer (Main Page Background) */
+.ambient-animals-layer {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 1;
+    transition: transform 0.25s ease-out;
+}
+
+.floating-critter {
+    position: absolute;
+    opacity: 0.34;
+    filter: drop-shadow(0 12px 24px rgba(15, 5, 14, 0.35));
+    animation: critterBob var(--dur, 7s) ease-in-out infinite alternate;
+    animation-delay: var(--delay, 0s);
+    will-change: transform;
+}
+
+@keyframes critterBob {
+    0% {
+        transform: translateY(0px) rotate(var(--rot-start, -4deg)) scale(1);
+    }
+    100% {
+        transform: translateY(-18px) rotate(var(--rot-end, 5deg)) scale(1.04);
+    }
+}
+
+/* Passcode Lock Screen Overlay */
+.lock-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: radial-gradient(circle at 50% 20%, rgba(58, 25, 50, 0.72) 0%, rgba(28, 16, 27, 0.88) 100%);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    transition: opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1), transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+    overflow-y: auto;
+}
+
+.lock-overlay.unlocked-exit {
+    opacity: 0;
+    transform: scale(1.06);
+    pointer-events: none;
+}
+
+/* Interactive Peeking Teddy Bear Animations */
+.teddy-peeker {
+    cursor: pointer;
+    transform-origin: bottom center;
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.teddy-ear-left, .teddy-ear-right {
+    transform-box: fill-box;
+    transform-origin: bottom center;
+    transition: transform 0.3s ease;
+}
+
+.teddy-peeker:hover .teddy-ear-left,
+.teddy-peeker.wiggle .teddy-ear-left {
+    animation: earWiggleLeft 0.55s ease-in-out;
+}
+
+.teddy-peeker:hover .teddy-ear-right,
+.teddy-peeker.wiggle .teddy-ear-right {
+    animation: earWiggleRight 0.55s ease-in-out;
+}
+
+@keyframes earWiggleLeft {
+    0%, 100% { transform: rotate(0deg); }
+    30% { transform: rotate(-16deg); }
+    65% { transform: rotate(10deg); }
+}
+
+@keyframes earWiggleRight {
+    0%, 100% { transform: rotate(0deg); }
+    30% { transform: rotate(16deg); }
+    65% { transform: rotate(-10deg); }
+}
+
+/* Paws covering eyes when typing PIN */
+.teddy-paws-resting {
+    transition: opacity 0.25s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.teddy-paws-covering {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.25s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.teddy-peeker.covering-eyes .teddy-paws-resting {
+    opacity: 0;
+    transform: translateY(12px);
+}
+
+.teddy-peeker.covering-eyes .teddy-paws-covering {
+    opacity: 1;
+    transform: translateY(0px);
+}
+
+/* Head shake on wrong PIN */
+.teddy-peeker.head-shake {
+    animation: cuteHeadShake 0.5s ease-in-out;
+}
+
+@keyframes cuteHeadShake {
+    0%, 100% { transform: translateX(0) rotate(0deg); }
+    20% { transform: translateX(-8px) rotate(-6deg); }
+    40% { transform: translateX(8px) rotate(6deg); }
+    60% { transform: translateX(-6px) rotate(-4deg); }
+    80% { transform: translateX(6px) rotate(4deg); }
+}
+
+/* Cheer bounce on right PIN */
+.teddy-peeker.cheer-bounce {
+    animation: cuteCheerBounce 0.65s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes cuteCheerBounce {
+    0% { transform: translateY(0) scale(1); }
+    45% { transform: translateY(-16px) scale(1.08); }
+    100% { transform: translateY(0) scale(1.03); }
+}
+
+/* Passcode PIN Dots & Tactile Keypad */
+.pin-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 9999px;
+    border: 1.5px solid rgba(255, 255, 255, 0.45);
+    background: rgba(255, 255, 255, 0.12);
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.pin-dot.filled {
+    background: linear-gradient(135deg, #ff8fab, #f7d99c);
+    border-color: #fff8f9;
+    transform: scale(1.25);
+    box-shadow: 0 0 14px rgba(255, 143, 171, 0.7);
+}
+
+.pin-dot.error {
+    background: #fb7185;
+    border-color: #ffe4e6;
+    box-shadow: 0 0 14px rgba(251, 113, 133, 0.85);
+}
+
+.keypad-btn {
+    width: 62px;
+    height: 62px;
+    border-radius: 9999px;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.16), rgba(255, 240, 245, 0.07));
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 8px 20px -6px rgba(15, 5, 14, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.35);
+    color: #fff8f9;
+    font-size: 1.25rem;
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+    user-select: none;
+}
+
+.keypad-btn:hover {
+    background: linear-gradient(145deg, rgba(255, 143, 171, 0.28), rgba(247, 217, 156, 0.2));
+    border-color: rgba(247, 217, 156, 0.55);
+    transform: translateY(-2px);
+}
+
+.keypad-btn:active, .keypad-btn.pressed {
+    transform: scale(0.91);
+    background: linear-gradient(145deg, rgba(255, 143, 171, 0.42), rgba(247, 217, 156, 0.32));
+}
+
+/* Luxury Frosted Glassmorphism Card */
+.luxury-glass {
+    background: linear-gradient(
+        145deg,
+        rgba(255, 255, 255, 0.15) 0%,
+        rgba(255, 240, 245, 0.08) 100%
+    );
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow:
+        0 24px 48px -12px rgba(15, 5, 14, 0.45),
+        inset 0 1px 1px rgba(255, 255, 255, 0.35);
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s ease;
+}
+
+.luxury-glass:hover {
+    border-color: rgba(255, 255, 255, 0.32);
+}
+
+/* Staggered Fade-Up Entrance Animation */
+.fade-up-item {
+    opacity: 0;
+    transform: translateY(18px);
+}
+
+body.unlocked .fade-up-item {
+    animation: fadeUpSmooth 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.25s; }
+.delay-3 { animation-delay: 0.4s; }
+.delay-4 { animation-delay: 0.55s; }
+
+@keyframes fadeUpSmooth {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Interactive Frosted-Shimmer Inline Secret Pill */
+.secret-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.15rem 0.75rem;
+    margin: 0.1rem 0.15rem;
+    border-radius: 9999px;
+    font-size: 0.85em;
+    font-weight: 600;
+    color: #fff1f2;
+    background: linear-gradient(120deg, rgba(253, 164, 175, 0.28), rgba(253, 186, 116, 0.28), rgba(216, 180, 254, 0.28));
+    border: 1px solid rgba(255, 255, 255, 0.38);
+    box-shadow: 0 4px 15px rgba(251, 113, 133, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    vertical-align: baseline;
+}
+
+.secret-pill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: pillShimmer 3.2s infinite;
+}
+
+@keyframes pillShimmer {
+    0% { left: -100%; }
+    50%, 100% { left: 160%; }
+}
+
+.secret-pill:hover {
+    transform: translateY(-1px) scale(1.02);
+    border-color: rgba(253, 230, 138, 0.65);
+    box-shadow: 0 6px 20px rgba(253, 186, 116, 0.32);
+}
+
+.secret-pill:active {
+    transform: scale(0.97);
+}
+
+.secret-pill.revealed {
+    background: rgba(253, 230, 138, 0.16);
+    border-color: rgba(253, 230, 138, 0.42);
+    color: #fef08a;
+    box-shadow: 0 2px 12px rgba(253, 230, 138, 0.15);
+    font-weight: 600;
+    font-size: 0.96em;
+    padding: 0.08rem 0.65rem;
+    cursor: default;
+    animation: revealPop 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.secret-pill.revealed::after {
+    display: none;
+}
+
+@keyframes revealPop {
+    0% { filter: blur(6px); opacity: 0.4; transform: scale(0.95); }
+    100% { filter: blur(0); opacity: 1; transform: scale(1); }
+}
+
+/* Inner Letter Box Glass */
+.letter-paper {
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 228, 230, 0.07) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.letter-transition {
+    opacity: 0;
+    transform: translateY(8px);
+}
+
+/* Hold-to-Unlock Pill Button */
+.hold-pill-btn {
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(253, 164, 175, 0.18));
+    border: 1px solid rgba(255, 255, 255, 0.34);
+    box-shadow: 0 12px 30px -8px rgba(251, 113, 133, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+}
+
+.hold-fill-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #fda4af 0%, #fdba74 50%, #fde68a 100%);
+    z-index: 0;
+    pointer-events: none;
+    transition: width 0.04s linear;
+}
+
+/* VIP Keepsake Pass Card */
+.keepsake-pass {
+    background: linear-gradient(
+        135deg,
+        rgba(255, 241, 242, 0.2) 0%,
+        rgba(253, 186, 116, 0.15) 50%,
+        rgba(216, 180, 254, 0.18) 100%
+    );
+    border: 1px solid rgba(253, 230, 138, 0.55);
+    box-shadow:
+        0 25px 50px -12px rgba(251, 113, 133, 0.3),
+        inset 0 1px 2px rgba(255, 255, 255, 0.5);
+    animation: cardReveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes cardReveal {
+    0% {
+        opacity: 0;
+        transform: scale(0.94) translateY(14px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Subtle Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: #1c101b;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 143, 171, 0.35);
+    border-radius: 9999px;
+}
