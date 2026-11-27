@@ -29,6 +29,56 @@ body.locked {
     height: 100vh;
 }
 
+/* Floating Glassmorphic Music Pill Button */
+.music-pill-btn {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.18), rgba(255, 143, 171, 0.16));
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    box-shadow: 0 10px 25px -5px rgba(15, 5, 14, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+}
+
+.music-pill-btn:hover {
+    border-color: rgba(247, 217, 156, 0.6);
+    background: linear-gradient(145deg, rgba(255, 143, 171, 0.26), rgba(247, 217, 156, 0.22));
+}
+
+.music-pill-btn.playing {
+    border-color: rgba(247, 217, 156, 0.65);
+    color: #f7d99c;
+    box-shadow: 0 10px 28px -4px rgba(255, 143, 171, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.45);
+}
+
+.eq-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 2.5px;
+    height: 13px;
+}
+
+.eq-bar {
+    width: 2.5px;
+    height: 4px;
+    border-radius: 9999px;
+    background: #ff8fab;
+    transition: height 0.25s ease, background-color 0.25s ease;
+}
+
+.music-pill-btn.playing .eq-bar {
+    background: #f7d99c;
+    animation: eqBounce 0.85s ease-in-out infinite alternate;
+}
+
+.music-pill-btn.playing .eq-bar:nth-child(1) { animation-delay: 0.0s; }
+.music-pill-btn.playing .eq-bar:nth-child(2) { animation-delay: 0.2s; }
+.music-pill-btn.playing .eq-bar:nth-child(3) { animation-delay: 0.4s; }
+.music-pill-btn.playing .eq-bar:nth-child(4) { animation-delay: 0.15s; }
+
+@keyframes eqBounce {
+    0% { height: 4px; }
+    100% { height: 13px; }
+}
+
 /* Fluid Editorial Typography */
 .hero-heading {
     font-family: 'Playfair Display', serif;
