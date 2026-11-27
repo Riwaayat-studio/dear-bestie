@@ -1,16 +1,24 @@
- /**
+/**
  * ============================================================================
- * CREATOR CONFIGURATION (Edit passcode, names, stories, mood letters & pass)
+ * CREATOR CONFIGURATION (Edit passcode, music, names, stories, notes & pass)
  * ============================================================================
  */
 const CONFIG = {
     // Passcode Lock Screen Settings
     passcode: "0709",
-    passcodeHint: "Hint: My Birth day and month✨",
+    passcodeHint: "Hint: Try My Birth Date & Month✨",
+
+    // Background Music Settings (Place your .mp3 file in the same folder)
+    music: {
+        src: "song.mp3",
+        playingLabel: "Our Vibe ♪",
+        pausedLabel: "Play Music",
+        maxVolume: 0.65
+    },
 
     // Personalize names here
     recipientName: "Bestie",
-    senderRole: "Your Bhai & Best Friend",
+    senderRole: "Your Best Friend",
 
     // 1. Hero Section Content
     hero: {
@@ -125,6 +133,7 @@ const CONFIG = {
 const state = {
     enteredPin: "",
     isUnlocked: false,
+    isMusicPlaying: false,
     unlockedSecrets: 0,
     totalSecrets: 0,
     selectedMoodId: null,
@@ -135,7 +144,78 @@ const state = {
 
 /**
  * ============================================================================
- * 0. CUTE ANIMAL SVG LIBRARY & AMBIENT BACKGROUND GENERATOR
+ * 0A. BACKGROUND MUSIC PLAYER WITH SMOOTH FADE-IN ON UNLOCK
+ * ============================================================================
+ */
+let musicFadeInterval = null;
+
+function initMusicPlayer() {
+    const audioEl = document.getElementById("bgMusic");
+    const toggleBtn = document.getElementById("musicToggleBtn");
+    const btnLabel = document.getElementById("musicBtnLabel");
+
+    if (!audioEl || !toggleBtn) return;
+
+    audioEl.src = CONFIG.music.src;
+    audioEl.volume = CONFIG.music.maxVolume;
+    btnLabel.textContent = CONFIG.music.pausedLabel;
+
+    function updateMusicButtonUI(playing) {
+        state.isMusicPlaying = playing;
+        if (playing) {
+            toggleBtn.classList.add("playing");
+            btnLabel.textContent = CONFIG.music.playingLabel;
+        } else {
+            toggleBtn.classList.remove("playing");
+            btnLabel.textContent = CONFIG.music.pausedLabel;
+        }
+    }
+
+    function playWithFadeIn() {
+        if (state.isMusicPlaying) return;
+        if (musicFadeInterval) clearInterval(musicFadeInterval);
+
+        audioEl.volume = 0;
+        const playPromise = audioEl.play();
+
+        if (playPromise !== undefined) {
+            playPromise
+                .then(() => {
+                    updateMusicButtonUI(true);
+                    let currentVol = 0;
+                    const step = CONFIG.music.maxVolume / 20;
+                    musicFadeInterval = setInterval(() => {
+                        currentVol = Math.min(currentVol + step, CONFIG.music.maxVolume);
+                        audioEl.volume = currentVol;
+                        if (currentVol >= CONFIG.music.maxVolume) {
+                            clearInterval(musicFadeInterval);
+                        }
+                    }, 80);
+                })
+                .catch((err) => {
+                    console.warn("Audio playback waiting for user tap:", err);
+                    updateMusicButtonUI(false);
+                });
+        }
+    }
+
+    toggleBtn.addEventListener("click", () => {
+        if (state.isMusicPlaying) {
+            if (musicFadeInterval) clearInterval(musicFadeInterval);
+            audioEl.pause();
+            updateMusicButtonUI(false);
+        } else {
+            playWithFadeIn();
+        }
+    });
+
+    // Expose fade-in trigger for passcode unlock
+    window.startBackgroundMusicWithFade = playWithFadeIn;
+}
+
+/**
+ * ============================================================================
+ * 0B. CUTE ANIMAL SVG LIBRARY & AMBIENT BACKGROUND GENERATOR
  * ============================================================================
  */
 const CUTE_ANIMAL_SVGS = {
@@ -263,7 +343,7 @@ function initAmbientCuteAnimals() {
 
 /**
  * ============================================================================
- * 0B. INTERACTIVE CUTE PASSCODE LOCK SCREEN LOGIC
+ * 0C. INTERACTIVE CUTE PASSCODE LOCK SCREEN LOGIC
  * ============================================================================
  */
 function initPasscodeLockScreen() {
@@ -337,7 +417,7 @@ function initPasscodeLockScreen() {
 
     function verifyPasscode() {
         if (state.enteredPin === String(CONFIG.passcode)) {
-            // Correct PIN! Teddy cheers, hearts/paws burst, and lock screen fades out
+            // Correct PIN! Teddy cheers, music fades in, and lock screen opens
             state.isUnlocked = true;
             peekingTeddy.classList.remove("covering-eyes");
             peekingTeddy.classList.add("cheer-bounce");
@@ -346,6 +426,10 @@ function initPasscodeLockScreen() {
 
             if (navigator.vibrate) {
                 try { navigator.vibrate([30, 25, 60]); } catch (e) {}
+            }
+
+            if (typeof window.startBackgroundMusicWithFade === "function") {
+                window.startBackgroundMusicWithFade();
             }
 
             triggerCuteCelebrationBurst();
@@ -795,6 +879,7 @@ function triggerCuteCelebrationBurst() {
  */
 window.onload = function () {
     try {
+        initMusicPlayer();
         initAmbientCuteAnimals();
         initPasscodeLockScreen();
         initHeroAndFooter();
